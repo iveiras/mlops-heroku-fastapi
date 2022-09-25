@@ -12,6 +12,7 @@ if "DYNO" in os.environ and os.path.isdir(".dvc"):
         exit("dvc pull failed")
     os.system("rm -r .dvc .apt/usr/lib/dvc")
 
+
 class CensusData(BaseModel):
     age: int
     workclass: str
@@ -51,11 +52,13 @@ class CensusData(BaseModel):
 
 app = FastAPI()
 
+
 @app.get("/")
 async def welcome():
     return {"message": "This is the salary prediction API based on census data."}
 
-@app.post("/predict")
+
+@app.post("/inference")
 async def predict_salary(record: CensusData):
     input_census = pd.read_json(record)
     salary = inference(input_census)

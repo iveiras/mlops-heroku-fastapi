@@ -6,8 +6,8 @@ from starter.ml.model import train_model, compute_model_metrics, inference
 
 
 # Load the data and split it in train-test
-data = pd.read_csv("data/census_mod.csv", sep = ",")
-train, test = sklearn.model_selection.train_test_split(data, test_size = 0.20)
+data = pd.read_csv("data/census_mod.csv", sep=",")
+train, test = sklearn.model_selection.train_test_split(data, test_size=0.20)
 
 # List categorical features
 cat_features = [
@@ -23,14 +23,14 @@ cat_features = [
 
 # Process train data
 X_train, y_train, encoder, lb = process_data(
-    train, categorical_features = cat_features, label = "salary"
+    train, categorical_features=cat_features, label="salary"
 )
 
 
 # Test the process_data function
 def test_process_data():
     _, _, encoder, lb = process_data(
-        train, categorical_features = cat_features, label = "salary"
+        train, categorical_features=cat_features, label="salary"
     )
     assert type(encoder) == sklearn.preprocessing._encoders.OneHotEncoder
     assert type(lb) == sklearn.preprocessing._label.LabelBinarizer
@@ -39,7 +39,7 @@ def test_process_data():
 # Test the train_model function
 def test_train_model():
     model = train_model(X_train, y_train)
-    assert type(model) == sklearn.linear_model._logistic.LogisticRegression 
+    assert type(model) == sklearn.linear_model._logistic.LogisticRegression
 
 
 # Test the inference function
@@ -65,4 +65,3 @@ if __name__ == "__main__":
     test_train_model()
     test_inference()
     test_compute_model_metrics()
-    

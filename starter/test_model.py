@@ -57,11 +57,3 @@ def test_compute_model_metrics():
     assert 0 <= precision <= 1
     assert 0 <= recall <= 1
     assert 0 <= fbeta <= 1
-
-
-# Run all unit tests
-if __name__ == "__main__":
-    test_process_data()
-    test_train_model()
-    test_inference()
-    test_compute_model_metrics()

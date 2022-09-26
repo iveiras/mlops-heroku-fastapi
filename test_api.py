@@ -1,31 +1,65 @@
 from fastapi.testclient import TestClient
-
-# Import our app from main.py.
 from main import app
+from main import CensusData
 
 # Instantiate the testing client with our app.
 client = TestClient(app)
 
 
-# Write tests using the same syntax as with the requests module.
-def test_api_without_query():
-    r = client.get("/items/12")
-    assert r.status_code == 200
-    assert r.json() == {"fetch": "Fetched 1 of 12"}
+# Test root GET method.
+def test_get():
+    response = client.get("/")
+    assert response.status_code == 200
+    assert response.json()["message"] == "This is the salary prediction API based on census data."
 
 
-def test_api_with_query():
-    r = client.get("/items/12?count=100")
-    assert r.status_code == 200
-    assert r.json() == {"fetch": "Fetched 100 of 12"}
+# Test POST inference method with <=50k result.
+def test_salary_below():
+    body = CensusData(
+        **{
+            "age": 19,
+            "workclass": "Private",
+            "fnlgt": 544091,
+            "education": "HS-grad",
+            "education-num": 9,
+            "marital-status": "Married-AF-spouse",
+            "occupation": "Adm-clerical",
+            "relationship": "Wife",
+            "race": "White",
+            "sex": "Female",
+            "capital-gain": 0,
+            "capital-loss": 0,
+            "hours-per-week": 25,
+            "native-country": "United-States",
+        }
+    )
+
+    response = client.post("/inference", data=body.json(by_alias=True))
+    assert response.status_code == 200
+    assert response.json()["salary"] == "<=50K"
 
 
-def test_api_wrong_url():
-    r = client.get("/100?count=23")
-    assert r.status_code != 200
+# Test POST inference method with >50k result.
+def test_salary_above():
+    body = CensusData(
+        **{
+            "age": 42,
+            "workclass": "Private",
+            "fnlgt": 159449,
+            "education": "Bachelors",
+            "education-num": 13,
+            "marital-status": "Married-civ-spouse",
+            "occupation": "Exec-managerial",
+            "relationship": "Husband",
+            "race": "White",
+            "sex": "Male",
+            "capital-gain": 5178,
+            "capital-loss": 0,
+            "hours-per-week": 40,
+            "native-country": "United-States",
+        }
+    )
 
-
-if __name__ == "__main__":
-    test_api_with_query()
-    test_api_without_query()
-    test_api_wrong_url()
+    response = client.post("/inference", data=body.json(by_alias=True))
+    assert response.status_code == 200
+    assert response.json()["salary"] == ">50K"

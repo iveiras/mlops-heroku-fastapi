@@ -1,6 +1,5 @@
 # Import needed libraries
 import requests
-import json
 from main import CensusData
 
 
@@ -25,6 +24,6 @@ body = CensusData(
     )
 
 # Request to the API and print results
-response = requests.post("https://***.herokuapp.com/inference", data=body.json(by_alias=True))
+response = requests.post("https://iveiras-mlops-udacity.herokuapp.com/inference", data=body.json(by_alias=True))
 print("Status code:", response.status_code)
 print(response.json())

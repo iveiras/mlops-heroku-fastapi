@@ -2,5 +2,3 @@
     remote = census
 ['remote "census"']
     url = s3://iveiras-mlops3
-    access_key_id = AKIAQIXE2K5E2NI4JEGP
-    secret_access_key = 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
